@@ -1,20 +1,24 @@
 #pragma once
-#include<vector>
-#include<iostream>
-#include<algorithm>
+#include <vector>
+#include <iostream>
+#include <algorithm>
 
 using namespace std;
 
-
-vector<vector<int>> combine(int n, int k) {
+vector<vector<int>> combine(int n, int k)
+{
 	vector<vector<int>> result;
 	int i = 0;
 	vector<int> p(k, 0);
-	while (i >= 0) {
+	while (i >= 0)
+	{
 		p[i]++;
-		if (p[i] > n) --i;
-		else if (i == k - 1) result.push_back(p);
-		else {
+		if (p[i] > n)
+			--i;
+		else if (i == k - 1)
+			result.push_back(p);
+		else
+		{
 			++i;
 			p[i] = p[i - 1];
 		}
@@ -22,40 +26,53 @@ vector<vector<int>> combine(int n, int k) {
 	return result;
 }
 
-vector<vector<int>> getActions(vector<int>& handcards, vector<int>& last) {
+vector<vector<int>> getActions(vector<int> &handcards, vector<int> &last)
+{
 	vector<vector<int>> res;
-	int totalCard = 0; // ÊÖÀïµÄÅÆÊıÄ¿
-	for (int num : last) totalCard += num;
-	if (totalCard == 0) {
+	int totalCard = 0; // æ‰‹é‡Œçš„ç‰Œæ•°ç›®
+	for (int num : last)
+		totalCard += num;
+	if (totalCard == 0)
+	{
 		vector<vector<bool>> records(4, vector<bool>(15, false));
-		vector<int> lenDict = { 5, 3, 2 };
-		// ºËµ¯
-		if (handcards[13] && handcards[14]) {
+		vector<int> lenDict = {5, 3, 2};
+		// æ ¸å¼¹
+		if (handcards[13] && handcards[14])
+		{
 			vector<int> tmp(15, 0);
 			tmp[13] = 1;
 			tmp[14] = 1;
 			res.push_back(tmp);
 		}
-		// µ¥³ö£ºµ¥¡¢Ë«¡¢Èı¡¢ËÄ & ËÄ´ø2µ¥£¬2Ë«
-		for (int i = 0; i < 15; i++) {
-			for (int j = 1; j <= handcards[i]; j++) {
+		// å•å‡ºï¼šå•ã€åŒã€ä¸‰ã€å›› & å››å¸¦2å•ï¼Œ2åŒ
+		for (int i = 0; i < 15; i++)
+		{
+			for (int j = 1; j <= handcards[i]; j++)
+			{
 				records[j - 1][i] = true;
 				vector<int> tmp(15, 0);
 				tmp[i] = j;
 				res.push_back(tmp);
-				if (j == 4) {  // ËÄ´ø2µ¥£¬2Ë«
-					for (int num = 1; num <= 2; num++) { // µ¥Ë«³á
+				if (j == 4)
+				{ // å››å¸¦2å•ï¼Œ2åŒ
+					for (int num = 1; num <= 2; num++)
+					{ // å•åŒç¿…
 						vector<int> container;
-						for (int k = 0; k < 15; k++) {
-							if (k != i && handcards[k] >= num) {
+						for (int k = 0; k < 15; k++)
+						{
+							if (k != i && handcards[k] >= num)
+							{
 								container.push_back(k);
 							}
 						}
-						if (container.size() < 2) break;
+						if (container.size() < 2)
+							break;
 						vector<vector<int>> combinations = combine(container.size(), 2);
-						for (vector<int> idxs : combinations) {
+						for (vector<int> idxs : combinations)
+						{
 							vector<int> backup(tmp);
-							for (int idx : idxs) {
+							for (int idx : idxs)
+							{
 								backup[container[idx - 1]] = num;
 							}
 							res.push_back(backup);
@@ -64,17 +81,22 @@ vector<vector<int>> getActions(vector<int>& handcards, vector<int>& last) {
 				}
 			}
 		}
-		// Èı´øÒ»£¬Èı´ø¶ş
-		for (int main = 0; main < 15; main++) {
-			if (handcards[main] >= 3) {
-				for (int i = 0; i < 15; i++) {
-					if (i != main && records[0][i]) { // + 1
+		// ä¸‰å¸¦ä¸€ï¼Œä¸‰å¸¦äºŒ
+		for (int main = 0; main < 15; main++)
+		{
+			if (handcards[main] >= 3)
+			{
+				for (int i = 0; i < 15; i++)
+				{
+					if (i != main && records[0][i])
+					{ // + 1
 						vector<int> tmp(15, 0);
 						tmp[main] = 3;
 						tmp[i] = 1;
 						res.push_back(tmp);
 					}
-					if (i != main && records[1][i]) { // + 2
+					if (i != main && records[1][i])
+					{ // + 2
 						vector<int> tmp(15, 0);
 						tmp[main] = 3;
 						tmp[i] = 2;
@@ -83,35 +105,50 @@ vector<vector<int>> getActions(vector<int>& handcards, vector<int>& last) {
 				}
 			}
 		}
-		// Ë³×Ó£ºµ¥¡¢Ë«¡¢Èı & ·É»ú´ø³á°ò
-		for (int t = 0; t < 3; t++) {
+		// é¡ºå­ï¼šå•ã€åŒã€ä¸‰ & é£æœºå¸¦ç¿…è†€
+		for (int t = 0; t < 3; t++)
+		{
 			int start = 0, cur = 0;
-			while (cur < 12) {
+			while (cur < 12)
+			{
 				// 'A' index is 11
-				while (cur < 12 && records[t][cur]) cur++;
-				if (cur - start >= lenDict[t]) {
-					// ÊÖÅÆ×î¶àÓĞ20¸ö
-					for (int len = lenDict[t]; len <= (cur - start) && (t + 1) * len <= 20; len++) {
-						for (int i = start; i + len <= cur; i++) {
+				while (cur < 12 && records[t][cur])
+					cur++;
+				if (cur - start >= lenDict[t])
+				{
+					// æ‰‹ç‰Œæœ€å¤šæœ‰20ä¸ª
+					for (int len = lenDict[t]; len <= (cur - start) && (t + 1) * len <= 20; len++)
+					{
+						for (int i = start; i + len <= cur; i++)
+						{
 							vector<int> tmp(15, 0);
-							for (int j = i; j < i + len; j++) {
+							for (int j = i; j < i + len; j++)
+							{
 								tmp[j] = t + 1;
 							}
 							res.push_back(tmp);
-							if (t == 2) {  // ·É»ú¿ÉÒÔ´ø1, 2³á°ò
-								for (int wing = 1; wing <= 2; wing++) { // µ¥Ë«³á
-									if ((t + 1) * len + wing * len <= 20) {
+							if (t == 2)
+							{ // é£æœºå¯ä»¥å¸¦1, 2ç¿…è†€
+								for (int wing = 1; wing <= 2; wing++)
+								{ // å•åŒç¿…
+									if ((t + 1) * len + wing * len <= 20)
+									{
 										vector<int> container;
-										for (int i = 0; i < 15; i++) {
-											if (tmp[i] == 0 && handcards[i] >= wing) {
+										for (int i = 0; i < 15; i++)
+										{
+											if (tmp[i] == 0 && handcards[i] >= wing)
+											{
 												container.push_back(i);
 											}
 										}
-										if (int(container.size()) < len) break;
+										if (int(container.size()) < len)
+											break;
 										vector<vector<int>> combinations = combine(container.size(), len);
-										for (vector<int> idxs : combinations) {
+										for (vector<int> idxs : combinations)
+										{
 											vector<int> backup(tmp);
-											for (int idx : idxs) {
+											for (int idx : idxs)
+											{
 												backup[container[idx - 1]] = wing;
 											}
 											res.push_back(backup);
@@ -122,65 +159,87 @@ vector<vector<int>> getActions(vector<int>& handcards, vector<int>& last) {
 						}
 					}
 				}
-				while (cur < 12 && !records[t][cur]) cur++;
+				while (cur < 12 && !records[t][cur])
+					cur++;
 				start = cur;
 			}
 		}
-	} else {
-		// È«¾ÖÊı¾İ
-		int diffCard = 0; // ÊÖÀï²»Í¬ÖÖÀàµÄÅÆÊı
-		int maxCard = 0;  // ÊÖÀïµÄ×î´óµÄÅÆ: 0, 1, ... 14
-		int maxCount = 0;  // ÊÖÀï×î¶àµÄÅÆ£¬ËûÓĞ¶àÉÙ¸ö
-		vector<int> maxCountCard; // ÊÖÀï×î¶àµÄÅÆĞÎ³ÉµÄÊı×é
-		for (int i = 0; i < 15; i++) {
-			if (last[i] != 0) {
+	}
+	else
+	{
+		// å…¨å±€æ•°æ®
+		int diffCard = 0;		  // æ‰‹é‡Œä¸åŒç§ç±»çš„ç‰Œæ•°
+		int maxCard = 0;		  // æ‰‹é‡Œçš„æœ€å¤§çš„ç‰Œ: 0, 1, ... 14
+		int maxCount = 0;		  // æ‰‹é‡Œæœ€å¤šçš„ç‰Œï¼Œä»–æœ‰å¤šå°‘ä¸ª
+		vector<int> maxCountCard; // æ‰‹é‡Œæœ€å¤šçš„ç‰Œå½¢æˆçš„æ•°ç»„
+		for (int i = 0; i < 15; i++)
+		{
+			if (last[i] != 0)
+			{
 				maxCard = i;
 				diffCard += 1;
-				if (last[i] > maxCount) maxCount = last[i];
+				if (last[i] > maxCount)
+					maxCount = last[i];
 			}
 		}
-		for (int i = 0; i < 15; i++) {
-			if (last[i] == maxCount) {
+		for (int i = 0; i < 15; i++)
+		{
+			if (last[i] == maxCount)
+			{
 				maxCountCard.push_back(i);
 			}
 		}
-		// ÈÃÒ»²½£¬Òª²»Æğ
+		// è®©ä¸€æ­¥ï¼Œè¦ä¸èµ·
 		vector<int> none(15, 0);
 		res.push_back(none);
-		// --------------ÄëÑ¹¹æÔò------------------
-		// ºËµ¯ÄëÑ¹Ò»ÇĞ
-		if (handcards[13] == 1 && handcards[14] == 1) {  // ºËµ¯Õ¨Ëû£¡
+		// --------------ç¢¾å‹è§„åˆ™------------------
+		// æ ¸å¼¹ç¢¾å‹ä¸€åˆ‡
+		if (handcards[13] == 1 && handcards[14] == 1)
+		{ // æ ¸å¼¹ç‚¸ä»–ï¼
 			vector<int> tmp(15, 0);
-			tmp[13] = 1; tmp[14] = 1;
+			tmp[13] = 1;
+			tmp[14] = 1;
 			res.push_back(tmp);
 		}
-		if (totalCard == 2 && last[13] == 1 && last[14] == 1) {  // ºËµ¯Òª²»Æğ
+		if (totalCard == 2 && last[13] == 1 && last[14] == 1)
+		{ // æ ¸å¼¹è¦ä¸èµ·
 			return res;
 		}
-		// Õ¨µ¯ÄëÑ¹·ÇºËµ¯£¬·Ç¸ü´óµÄÕ¨µ¯ÒÔÍâµÄËùÓĞÅÆĞÍ
-		if (diffCard == 1 && maxCount == 4) {
-			for (int i = maxCard + 1; i < 15; i++) {
-				if (handcards[i] == 4) {
-					vector<int> tmp(15, 0);
-					tmp[i] = 4;
-					res.push_back(tmp);
-				}
-			}
-		} else {
-			for (int i = 0; i < 15; i++) {
-				if (handcards[i] == 4) {
+		// ç‚¸å¼¹ç¢¾å‹éæ ¸å¼¹ï¼Œéæ›´å¤§çš„ç‚¸å¼¹ä»¥å¤–çš„æ‰€æœ‰ç‰Œå‹
+		if (diffCard == 1 && maxCount == 4)
+		{
+			for (int i = maxCard + 1; i < 15; i++)
+			{
+				if (handcards[i] == 4)
+				{
 					vector<int> tmp(15, 0);
 					tmp[i] = 4;
 					res.push_back(tmp);
 				}
 			}
 		}
-		// --------------Õë¶ÔĞÔ¹æÔò------------------
-		// µ¥³ö£º1£¬2£¬3
-		if (diffCard == 1) {
-			if (maxCount < 4) {
-				for (int i = maxCard + 1; i < 15; i++) {
-					if (handcards[i] >= maxCount) {
+		else
+		{
+			for (int i = 0; i < 15; i++)
+			{
+				if (handcards[i] == 4)
+				{
+					vector<int> tmp(15, 0);
+					tmp[i] = 4;
+					res.push_back(tmp);
+				}
+			}
+		}
+		// --------------é’ˆå¯¹æ€§è§„åˆ™------------------
+		// å•å‡ºï¼š1ï¼Œ2ï¼Œ3
+		if (diffCard == 1)
+		{
+			if (maxCount < 4)
+			{
+				for (int i = maxCard + 1; i < 15; i++)
+				{
+					if (handcards[i] >= maxCount)
+					{
 						vector<int> tmp(15, 0);
 						tmp[i] = maxCount;
 						res.push_back(tmp);
@@ -189,13 +248,18 @@ vector<vector<int>> getActions(vector<int>& handcards, vector<int>& last) {
 			}
 			return res;
 		}
-		// Èı´øÒ»£¬Èı´ø¶ş
-		if ((totalCard == 4 || totalCard == 5) && diffCard == 2 && maxCount == 3) {
+		// ä¸‰å¸¦ä¸€ï¼Œä¸‰å¸¦äºŒ
+		if ((totalCard == 4 || totalCard == 5) && diffCard == 2 && maxCount == 3)
+		{
 			int kicker = totalCard - 3;
-			for (int main = maxCountCard[0] + 1; main < 15; main++) {
-				if (handcards[main] >= 3) {
-					for (int i = 0; i < 15; i++) {
-						if (i != main && handcards[i] >= kicker) { // ´ø1»ò2
+			for (int main = maxCountCard[0] + 1; main < 15; main++)
+			{
+				if (handcards[main] >= 3)
+				{
+					for (int i = 0; i < 15; i++)
+					{
+						if (i != main && handcards[i] >= kicker)
+						{ // å¸¦1æˆ–2
 							vector<int> tmp(15, 0);
 							tmp[main] = 3;
 							tmp[i] = kicker;
@@ -206,47 +270,62 @@ vector<vector<int>> getActions(vector<int>& handcards, vector<int>& last) {
 			}
 			return res;
 		}
-		// Ë³×Ó£º1£¬2£¬3
-		if (diffCard == maxCountCard.size()) {
+		// é¡ºå­ï¼š1ï¼Œ2ï¼Œ3
+		if (diffCard == maxCountCard.size())
+		{
 			int type = totalCard / diffCard;
 			int start = maxCountCard[0] + 1;
 			int cur = start;
-			while (cur < 12) {
+			while (cur < 12)
+			{
 				// 'A' index is 11
-				while (cur < 12 && handcards[cur] >= type) cur++;
-				if (cur - start >= diffCard) {
-					for (int i = start; i + diffCard <= cur; i++) {
+				while (cur < 12 && handcards[cur] >= type)
+					cur++;
+				if (cur - start >= diffCard)
+				{
+					for (int i = start; i + diffCard <= cur; i++)
+					{
 						vector<int> tmp(15, 0);
-						for (int j = i; j < i + diffCard; j++) {
+						for (int j = i; j < i + diffCard; j++)
+						{
 							tmp[j] = type;
 						}
 						res.push_back(tmp);
 					}
 				}
-				while (cur < 12 && handcards[cur] < type) cur++;
+				while (cur < 12 && handcards[cur] < type)
+					cur++;
 				start = cur;
 			}
 			return res;
 		}
-		// ËÄ´øÁ©1£¬ËÄ´øÁ©2
-		if (diffCard == 3 && maxCount == 4 && (totalCard == 6) || (totalCard == 8)) {
+		// å››å¸¦ä¿©1ï¼Œå››å¸¦ä¿©2
+		if (diffCard == 3 && maxCount == 4 && (totalCard == 6) || (totalCard == 8))
+		{
 			int kicker = (totalCard - 4) / 2;
-			for (int i = maxCountCard[0] + 1; i < 15; i++) {
-				if (handcards[i] == 4) {
+			for (int i = maxCountCard[0] + 1; i < 15; i++)
+			{
+				if (handcards[i] == 4)
+				{
 					vector<int> tmp(15, 0);
 					tmp[i] = 4;
 
 					vector<int> container;
-					for (int k = 0; k < 15; k++) {
-						if (k != i && handcards[k] >= kicker) {
+					for (int k = 0; k < 15; k++)
+					{
+						if (k != i && handcards[k] >= kicker)
+						{
 							container.push_back(k);
 						}
 					}
-					if (container.size() < 2) continue;
+					if (container.size() < 2)
+						continue;
 					vector<vector<int>> combinations = combine(container.size(), 2);
-					for (vector<int> idxs : combinations) {
+					for (vector<int> idxs : combinations)
+					{
 						vector<int> backup(tmp);
-						for (int idx : idxs) {
+						for (int idx : idxs)
+						{
 							backup[container[idx - 1]] = kicker;
 						}
 						res.push_back(backup);
@@ -255,39 +334,52 @@ vector<vector<int>> getActions(vector<int>& handcards, vector<int>& last) {
 			}
 			return res;
 		}
-		// ·É»ú´øÒ»¡¢¶ş³á
-		for (int wing = 1; wing <= 2; wing++) {
-			if (maxCountCard.size() >= 2 && maxCount == 3 && totalCard == (3 + wing) * maxCountCard.size() && diffCard == 2 * maxCountCard.size()) {
+		// é£æœºå¸¦ä¸€ã€äºŒç¿…
+		for (int wing = 1; wing <= 2; wing++)
+		{
+			if (maxCountCard.size() >= 2 && maxCount == 3 && totalCard == (3 + wing) * maxCountCard.size() && diffCard == 2 * maxCountCard.size())
+			{
 				int len = diffCard / 2;
 				int start = maxCountCard[0];
 				int cur = start;
-				while (cur < 12) {
+				while (cur < 12)
+				{
 					// 'A' index is 11
-					while (cur < 12 && handcards[cur] >= 3) cur++;
-					if (cur - start >= len) {
-						for (int i = start; i + len <= cur; i++) {
+					while (cur < 12 && handcards[cur] >= 3)
+						cur++;
+					if (cur - start >= len)
+					{
+						for (int i = start; i + len <= cur; i++)
+						{
 							vector<int> tmp(15, 0);
-							for (int j = i; j < i + len; j++) {
+							for (int j = i; j < i + len; j++)
+							{
 								tmp[j] = 3;
 							}
 							vector<int> container;
-							for (int i = 0; i < 15; i++) {
-								if (tmp[i] == 0 && handcards[i] >= wing) {
+							for (int i = 0; i < 15; i++)
+							{
+								if (tmp[i] == 0 && handcards[i] >= wing)
+								{
 									container.push_back(i);
 								}
 							}
-							if (container.size() < 2) continue;
+							if (container.size() < 2)
+								continue;
 							vector<vector<int>> combinations = combine(container.size(), len);
-							for (vector<int> idxs : combinations) {
+							for (vector<int> idxs : combinations)
+							{
 								vector<int> backup(tmp);
-								for (int idx : idxs) {
+								for (int idx : idxs)
+								{
 									backup[container[idx - 1]] = wing;
 								}
 								res.push_back(backup);
 							}
 						}
 					}
-					while (cur < 12 && handcards[cur] < 3) cur++;
+					while (cur < 12 && handcards[cur] < 3)
+						cur++;
 					start = cur;
 				}
 				return res;

@@ -2,7 +2,7 @@
 #include <vector>
 #include <istream>
 #include <string>
-#include "..//core.h"
+#include "../core.h"
 
 using namespace std;
 vector<vector<int>> res;
@@ -28,10 +28,10 @@ string value2Card(int v)
 		c = "2";
 		break;
 	case 13:
-		c = "С";
+		c = "小";
 		break;
 	case 14:
-		c = "��";
+		c = "大";
 		break;
 	default:
 		c = to_string(v + 3);
@@ -60,13 +60,13 @@ bool print(vector<vector<int>> &card)
 	{
 		bool res = print(i);
 		if (res == false)
-			cout << "Ҫ����";
+			cout << "要不起";
 		cout << endl;
 	}
 	return true;
 }
 
-TEST(getActionsTest, ����_�ֳ�54����_��������13550��)
+TEST(getActionsTest, 主动_手持54张牌_主动出牌13550种)
 {
 	vector<int> handcards;
 	for (int i = 0; i < 13; i++)
@@ -78,7 +78,7 @@ TEST(getActionsTest, ����_�ֳ�54����_��������
 	EXPECT_EQ(res.size(), 13550);
 }
 
-TEST(getActionsTest, ����_�ֳ�20�Ŵ�����_��������368��)
+TEST(getActionsTest, 主动_手持20张春天牌_主动出牌368种)
 {
 	vector<int> handcards = {0, 0, 0, 0, 0, 1, 1, 3, 3, 3, 3, 3, 1, 1, 1};
 	vector<int> none;
@@ -86,7 +86,7 @@ TEST(getActionsTest, ����_�ֳ�20�Ŵ�����_�����
 	EXPECT_EQ(res.size(), 368);
 }
 
-TEST(getActionsTest, ����_Ҫ����)
+TEST(getActionsTest, 被动_要不起)
 {
 	vector<int> handcards = {0, 2, 1, 2, 1, 1, 1, 1, 1, 3, 0, 2, 3, 1, 0};
 	vector<int> lastcards = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0};
@@ -94,7 +94,7 @@ TEST(getActionsTest, ����_Ҫ����)
 	EXPECT_EQ(res.size(), 1);
 }
 
-TEST(getActionsTest, ����_�Է��˵�_Ҫ����)
+TEST(getActionsTest, 被动_对方核弹_要不起)
 {
 	vector<int> handcards = {0, 2, 1, 2, 1, 1, 1, 1, 1, 3, 0, 2, 3, 1, 0};
 	vector<int> lastcards = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1};
@@ -102,7 +102,7 @@ TEST(getActionsTest, ����_�Է��˵�_Ҫ����)
 	EXPECT_EQ(res.size(), 1);
 }
 
-TEST(getActionsTest, ����_�ҷ��˵�_ը��)
+TEST(getActionsTest, 被动_我方核弹_炸他)
 {
 	vector<int> handcards = {1, 1, 1, 2, 1, 1, 1, 1, 1, 3, 0, 2, 3, 1, 1};
 	vector<int> lastcards = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0};
@@ -112,7 +112,7 @@ TEST(getActionsTest, ����_�ҷ��˵�_ը��)
 	EXPECT_EQ(res[1], ans);
 }
 
-TEST(getActionsTest, ����_ը��ը��)
+TEST(getActionsTest, 被动_炸弹炸他)
 {
 	vector<int> handcards = {0, 4, 1, 2, 1, 1, 1, 1, 1, 3, 0, 2, 3, 1, 0};
 	vector<int> lastcards = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};
@@ -121,7 +121,7 @@ TEST(getActionsTest, ����_ը��ը��)
 	EXPECT_EQ(res[1], ans);
 }
 
-TEST(getActionsTest, ����_ը����ѹ_Ҫ����)
+TEST(getActionsTest, 被动_炸弹被压_要不起)
 {
 	vector<int> handcards = {1, 1, 1, 2, 1, 1, 1, 1, 1, 3, 0, 4, 0, 0, 0};
 	vector<int> lastcards = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0};
@@ -129,7 +129,7 @@ TEST(getActionsTest, ����_ը����ѹ_Ҫ����)
 	EXPECT_EQ(res.size(), 1);
 }
 
-TEST(getActionsTest, ����_����_ѹ��)
+TEST(getActionsTest, 被动_单张_压他)
 {
 	vector<int> handcards = {0, 2, 1, 2, 1, 1, 1, 1, 1, 3, 0, 2, 3, 1, 0};
 	vector<int> lastcards = {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -137,7 +137,7 @@ TEST(getActionsTest, ����_����_ѹ��)
 	EXPECT_EQ(res.size(), 11 + 1);
 }
 
-TEST(getActionsTest, ����_����_ѹ��)
+TEST(getActionsTest, 被动_两张_压死)
 {
 	vector<int> handcards = {0, 2, 1, 2, 1, 1, 1, 1, 1, 3, 0, 2, 3, 1, 0};
 	vector<int> lastcards = {2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -145,7 +145,7 @@ TEST(getActionsTest, ����_����_ѹ��)
 	EXPECT_EQ(res.size(), 5 + 1);
 }
 
-TEST(getActionsTest, ����_����_����)
+TEST(getActionsTest, 被动_三张_大你)
 {
 	vector<int> handcards = {0, 2, 1, 2, 1, 1, 1, 1, 1, 3, 0, 2, 3, 1, 0};
 	vector<int> lastcards = {0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -153,7 +153,7 @@ TEST(getActionsTest, ����_����_����)
 	EXPECT_EQ(res.size(), 2 + 1);
 }
 
-TEST(getActionsTest, ����_ը��ѹը��)
+TEST(getActionsTest, 被动_炸弹压炸弹)
 {
 	vector<int> handcards = {0, 2, 1, 2, 1, 1, 1, 0, 1, 1, 0, 4, 1, 0, 0};
 	vector<int> lastcards = {0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -161,7 +161,7 @@ TEST(getActionsTest, ����_ը��ѹը��)
 	EXPECT_EQ(res.size(), 1 + 1);
 }
 
-TEST(getActionsTest, ����_����һ_ѹ��)
+TEST(getActionsTest, 被动_三带一_压死)
 {
 	vector<int> handcards = {0, 2, 1, 2, 1, 1, 1, 0, 1, 1, 0, 3, 1, 0, 0};
 	vector<int> lastcards = {0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -169,7 +169,7 @@ TEST(getActionsTest, ����_����һ_ѹ��)
 	EXPECT_EQ(res.size(), 9 + 1);
 }
 
-TEST(getActionsTest, ����_������_ѹ��)
+TEST(getActionsTest, 被动_三带二_压死)
 {
 	vector<int> handcards = {0, 2, 1, 2, 1, 1, 1, 0, 1, 1, 0, 3, 1, 0, 0};
 	vector<int> lastcards = {0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -177,7 +177,7 @@ TEST(getActionsTest, ����_������_ѹ��)
 	EXPECT_EQ(res.size(), 2 + 1);
 }
 
-TEST(getActionsTest, ����_˳��_����)
+TEST(getActionsTest, 被动_顺子_管上)
 {
 	vector<int> handcards = {0, 2, 1, 2, 1, 1, 0, 1, 1, 1, 1, 3, 1, 0, 0};
 	vector<int> lastcards = {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -185,7 +185,7 @@ TEST(getActionsTest, ����_˳��_����)
 	EXPECT_EQ(res.size(), 2 + 1);
 }
 
-TEST(getActionsTest, ����_��˳_����)
+TEST(getActionsTest, 被动_连顺_大你)
 {
 	vector<int> handcards = {0, 2, 1, 2, 2, 2, 2, 0, 1, 1, 0, 0, 1, 0, 0};
 	vector<int> lastcards = {0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -193,7 +193,7 @@ TEST(getActionsTest, ����_��˳_����)
 	EXPECT_EQ(res.size(), 2 + 1);
 }
 
-TEST(getActionsTest, ����_͹��ɻ�_ѹ��)
+TEST(getActionsTest, 被动_凸翅飞机_压死)
 {
 	vector<int> handcards = {0, 3, 3, 3, 3, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0};
 	vector<int> lastcards = {3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -201,7 +201,7 @@ TEST(getActionsTest, ����_͹��ɻ�_ѹ��)
 	EXPECT_EQ(res.size(), 3 + 1);
 }
 
-TEST(getActionsTest, ����_�Ĵ�������_ѹ��)
+TEST(getActionsTest, 被动_四带俩单张_压死)
 {
 	vector<int> handcards = {0, 2, 1, 2, 2, 2, 4, 0, 1, 1, 0, 0, 1, 0, 0};
 	vector<int> lastcards = {0, 1, 1, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -209,7 +209,7 @@ TEST(getActionsTest, ����_�Ĵ�������_ѹ��)
 	EXPECT_EQ(res.size(), 1 + 1 + 28);
 }
 
-TEST(getActionsTest, ����_�Ĵ���2)
+TEST(getActionsTest, 被动_四带俩2)
 {
 	vector<int> handcards = {0, 2, 1, 2, 2, 2, 2, 0, 1, 4, 0, 0, 1, 0, 0};
 	vector<int> lastcards = {0, 2, 2, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -217,7 +217,7 @@ TEST(getActionsTest, ����_�Ĵ���2)
 	EXPECT_EQ(res.size(), 1 + 1 + 10);
 }
 
-TEST(getActionsTest, ����_����ɻ�_ѹ��)
+TEST(getActionsTest, 被动_单翅飞机_压死)
 {
 	vector<int> handcards = {0, 2, 1, 3, 3, 3, 3, 0, 1, 1, 0, 0, 1, 0, 0};
 	vector<int> lastcards = {0, 1, 3, 3, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -225,7 +225,7 @@ TEST(getActionsTest, ����_����ɻ�_ѹ��)
 	EXPECT_EQ(res.size(), 1 + 20 + 20);
 }
 
-TEST(getActionsTest, ����_˫��ɻ�_����)
+TEST(getActionsTest, 被动_双翅飞机_管上)
 {
 	vector<int> handcards = {0, 2, 1, 3, 3, 3, 3, 0, 1, 2, 0, 0, 1, 0, 0};
 	vector<int> lastcards = {0, 2, 3, 3, 3, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0};
