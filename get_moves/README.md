@@ -1,0 +1,25 @@
+# get_moves
+
+## 使用说明
+
+- 安装依赖项 `pip install pybind11`
+
+- 运行
+    ```bash
+    cd build
+    cmake ..
+    ```
+
+- 会根据自己系统环境在`build`创建相应项目，然后
+
+    - Windows下的话，用vs打开`env.sln`，然后build一个`x64`的`Release`方案即可
+
+    - \*Unix 没试过
+
+- 然后，Windows下在`build/Release`目录下会有一个`r.xxx.pyd`文件，把这个文件复制出去，使它和你代码目录，代码直接`import r`即可使用。效果如下：
+
+    ![效果图]()
+
+- 如果`precompile`文件夹下没有你适合的，你编译生成后，放里面传上来
+
+- 其他不懂的，来353-3找我
