@@ -6,13 +6,14 @@
 
 - 运行
     ```bash
+    mkdir build
     cd build
     cmake ..
     ```
 
 - 会根据自己系统环境在`build`创建相应项目，然后
 
-    - Windows下的话，用vs打开`env.sln`，然后build一个`x64`的`Release`方案即可
+    - Windows下的话，用vs打开`r.sln`，然后build一个`x64`的`Release`方案即可
 
     - \*Unix 没试过
 
