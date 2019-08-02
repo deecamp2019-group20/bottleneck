@@ -2,7 +2,7 @@
 
 ## 使用说明
 
-- 安装依赖项 `pip install pybind11`
+- 安装依赖项 `conda install pybind11` （注意`pip install`不行，因为不会安装下面`cmake`操作中所需要的`.cmake`文件，如果你没装anaconda，就去官网自己下载pybind11，然后`build, cmake, make install`）
 
 - 运行
     ```bash
